@@ -4,31 +4,15 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
-
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
-}
 
 //Bag ...
 type Bag struct {
 	name     string
 	children map[string]int
 	parents  map[string]int
-}
-
-func addParent(parent *Bag, child *Bag) {
-	(*child).parents[(*parent).name]++
-}
-
-func addChild(parent *Bag, child *Bag) {
-	(*parent).children[(*child).name]++
 }
 
 func newBag(name string) *Bag {
@@ -38,18 +22,13 @@ func newBag(name string) *Bag {
 	return &b
 }
 
-func recParRet(m map[string]*Bag, curr string, counted map[string]int) int {
-	if len((*(m[curr])).parents) == 0 {
+func recParRet(m map[string]*Bag, curr string) int {
+	if len(((*(m[curr])).children)) == 0 {
 		return 0
 	} else {
 		temp := 0
-		for key := range (*(m[curr])).parents {
-			_, ok := counted[key]
-			if !ok {
-				temp++
-				counted[key]++
-				temp += recParRet(m, key, counted)
-			}
+		for key, value := range (*(m[curr])).children {
+			temp += value*recParRet(m, key) + value
 		}
 		return temp
 	}
@@ -65,14 +44,14 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 
-	m := make(map[string][]string)
+	m := make(map[string]map[string]int)
 
 	for scanner.Scan() {
 		var line string = scanner.Text()
 		if len(line) > 2 {
 			temp := strings.Split(line, " bags contain")
 			tempBagName := temp[0]
-			tempChildrenList := make([]string, 0)
+			tempChildrenList := make(map[string]int)
 			if temp[1] == " no other bags." {
 				m[tempBagName] = nil
 			} else {
@@ -84,7 +63,10 @@ func main() {
 				tempList := strings.Split(temp, ",")
 				for _, value := range tempList {
 					temp2 := strings.ReplaceAll(value[3:], ".", "")
-					tempChildrenList = append(tempChildrenList, temp2)
+					temp3 := value[:3]
+					temp3 = strings.ReplaceAll(temp3, " ", "")
+					i, _ := strconv.Atoi(temp3)
+					tempChildrenList[temp2] = i
 				}
 				m[tempBagName] = tempChildrenList
 			}
@@ -95,17 +77,12 @@ func main() {
 
 	for key, value := range m {
 		temp := newBag(key)
-		for key2, value2 := range m {
-			if contains(value2, key) {
-				(*temp).parents[key2]++
-			}
-		}
-		for _, value3 := range value {
-			(*temp).children[value3]++
+		for key2, value3 := range value {
+			(*temp).children[key2] = value3
 		}
 		m2[key] = temp
 	}
-	m3 := make(map[string]int)
-	println(recParRet(m2, "shiny gold", m3))
 
+	temp := recParRet(m2, "shiny gold")
+	println(temp)
 }
