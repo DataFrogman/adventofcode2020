@@ -109,6 +109,7 @@ func main() {
 			temp2 := make([]string, len(program))
 			copy(temp2, program)
 			temp2[i] = temp
+			println(i)
 			test(temp2)
 
 		} else if command[:3] == "nop" {
@@ -117,6 +118,7 @@ func main() {
 			temp2 := make([]string, len(program))
 			copy(temp2, program)
 			temp2[i] = temp
+			println(i)
 			test(temp2)
 		}
 	}
