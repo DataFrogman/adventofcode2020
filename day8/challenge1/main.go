@@ -38,7 +38,6 @@ func test(program []string) int {
 		if ok {
 			print("CORRUPTED FOUND: ")
 			println(curr - lastJump)
-			println(program[curr-lastJump][:3])
 			return 0
 			/*
 				if program[curr-lastJump][:3] == "jmp" {
