@@ -84,7 +84,7 @@ func test(program []string) int {
 }
 
 func main() {
-	file, err := os.Open("input.txt")
+	file, err := os.Open("sample.txt")
 
 	if err != nil {
 		log.Fatalln("Failed to open file", err)
