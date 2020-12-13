@@ -4,9 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math/big"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/deanveloper/modmath/v1/bigmod"
 )
 
 func main() {
@@ -41,20 +44,15 @@ func main() {
 		}
 	}
 
-	var touples [][2]int
+	var cartBusses []bigmod.CrtEntry
 	for i, v := range busses {
-		if v != -1 {
-			touples = append(touples, [2]int{i, v})
+		if v == -1 {
+			continue
 		}
+		tempA := big.NewInt(int64(v - i))
+		tempN := big.NewInt(int64(v))
+		tempCRT := bigmod.CrtEntry{A: tempA, N: tempN}
+		cartBusses = append(cartBusses, tempCRT)
 	}
-
-	var acc int = 0
-	var offset int = 1
-	for _, v := range touples {
-		for ((acc + v[0]) % v[1]) != 0 {
-			acc += offset
-		}
-		offset = offset * v[1]
-	}
-	fmt.Println(acc)
+	fmt.Println(bigmod.SolveCrtMany(cartBusses).String())
 }
