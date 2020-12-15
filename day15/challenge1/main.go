@@ -33,17 +33,16 @@ func main() {
 		speaking = int64(temp)
 		input[int64(temp)] = int64(i + 1)
 	}
-	for x := int64(len(stringInput) + 1); x < 30000001; x++ {
-		if x == int64(len(stringInput)+1) {
-			speaking = 0
-			if val, ok := input[speaking]; ok {
-				nextNum = x - val
-				input[speaking] = x
-			} else {
-				nextNum = 0
-				input[speaking] = x
-			}
-		} else if val, ok := input[nextNum]; ok {
+	speaking = 0
+	if val, ok := input[speaking]; ok {
+		nextNum = int64(len(stringInput)+1) - val
+		input[speaking] = int64(len(stringInput) + 1)
+	} else {
+		nextNum = 0
+		input[speaking] = int64(len(stringInput) + 1)
+	}
+	for x := int64(len(stringInput) + 2); x < 30000001; x++ {
+		if val, ok := input[nextNum]; ok {
 			speaking = nextNum
 			input[speaking] = x
 			nextNum = x - val
